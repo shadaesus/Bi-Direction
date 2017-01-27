@@ -25,6 +25,7 @@ Game.start = function() {
     //Retrives a copy of the context.
     Game.context = Game.canvas.getContext("2d");
 
+    console.log("Testing");
     //Dont know what this does yet.
     document.body.appendChild(Game.canvas);
 
