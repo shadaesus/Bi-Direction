@@ -1,4 +1,5 @@
 //Add listener for the keyboard when a key is released.
+//By Rory Bell and Alan Easdale
 window.addEventListener("keyup", keyboardControls, false);
 
 //Keyboard controller.
