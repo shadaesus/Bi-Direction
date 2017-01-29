@@ -8,12 +8,15 @@ function keyboardControls(e) {
         Game.player.switchControl();
 }
 
+var projectile;
+
 //Game object.
 var Game = {
     fps: 60,
     width: 640,
     height: 480,
-    time: 0
+    time: 0,
+
 };
 
 //Does animation stuff, need to look into how this actually works.
@@ -55,6 +58,9 @@ Game.run = (function () {
 
 //Sets up the Game object.
 Game.start = function () {
+    projectile = new Projectile();
+    projectile.src = "src/Projectile.js";
+
     //Retrieves the canvas from the html file.
     Game.canvas = document.getElementById("canvas");
     Game.canvas.width = Game.width;
@@ -91,7 +97,7 @@ function Player() {
     this.rot = 0;
     this.speed = 0.05;
     this.movDir = true;
-    this.projectile = new Projectile();
+   // this.projectile = new Projectile();
 
 //Updates the rotation of the player.
     this.update = function () {
@@ -105,14 +111,14 @@ function Player() {
         if (this.rot < -Math.PI*2)
             this.rot += Math.PI*2;
 
-        if (this.projectile.alive == true)
-            this.projectile.update();
+        if (projectile.alive == true)
+            projectile.update();
     }
 
 //Control for flipping rotation direction and firing (To be added).
     this.switchControl = function () {
         this.movDir = !this.movDir;
-        this.projectile.spawn(this.x, this.y, this.rot, 2.5);
+        projectile.spawn(this.x, this.y, this.rot, 2.5);
     }
 
 
@@ -132,49 +138,9 @@ function Player() {
         context.fill();
         context.closePath();
 
-        if (this.projectile.alive == true)
-            this.projectile.draw(context);
+        if (projectile.alive == true)
+            projectile.draw(context);
     }
 
 }
 
-//Projectile object.
-function Projectile() {
-    this.alive = false;
-
-    this.spawn = function (x, y, angle, speed) {
-        this.x = x;
-        this.y = y;
-        this.rot = angle;
-        this.speed = speed;
-        this.alive = true;
-        console.log("Pos: " + this.x + " " + this.y);
-        console.log("Rot: " + this.rot);
-        console.log("Spe: " + this.speed);
-
-    }
-
-    this.update = function () {
-        //Move by 'speed' in the direction of 'rot'.
-        this.x += this.speed * Math.cos(this.rot);
-        this.y += this.speed * Math.sin(this.rot);
-
-        if (this.x > Game.width || this.x < 0 || this.y < 0 || this.y > Game.height)
-        {
-            this.destroy();
-            console.log("Bullet reset.");
-        }
-    }
-
-    this.draw = function (context) {
-        //Create a 4x4 pixel filled rectangle at the position of [x,y]
-        context.fillRect(this.x - 2, this.y - 2, 4, 4);
-    }
-    this.destroy = function () {
-        this.x = 0;
-        this.y = 0;
-        this.rot = 0;
-        this.speed = 0;
-        this.alive = false;
-    }
-}
