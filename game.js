@@ -66,6 +66,8 @@ Game.start = function () {
     //Dont know what this does yet.
     document.body.appendChild(Game.canvas);
 
+    console.log("Line test")
+
     //Instantiates a new player.
     Game.player = new Player();
 
