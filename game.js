@@ -1,5 +1,7 @@
-//Add listener for the keyboard when a key is released.
 //By Rory Bell and Alan Easdale
+
+
+//Add listener for the keyboard when a key is released.
 window.addEventListener("keyup", keyboardControls, false);
 
 //Keyboard controller.
@@ -7,8 +9,6 @@ function keyboardControls(e) {
     if (e.keyCode == ("32"))
         Game.player.switchControl();
 }
-
-var projectile;
 
 //Game object.
 var Game = {
@@ -58,9 +58,6 @@ Game.run = (function () {
 
 //Sets up the Game object.
 Game.start = function () {
-    projectile = new Projectile();
-    projectile.src = "src/Projectile.js";
-
     //Retrieves the canvas from the html file.
     Game.canvas = document.getElementById("canvas");
     Game.canvas.width = Game.width;
@@ -97,7 +94,7 @@ function Player() {
     this.rot = 0;
     this.speed = 0.05;
     this.movDir = true;
-   // this.projectile = new Projectile();
+    this.projectiles = new SinglyLinkedList();
 
 //Updates the rotation of the player.
     this.update = function () {
@@ -111,14 +108,27 @@ function Player() {
         if (this.rot < -Math.PI*2)
             this.rot += Math.PI*2;
 
-        if (projectile.alive == true)
-            projectile.update();
+        //Display how many projectiles are in the linked list.
+        console.log(this.projectiles.length());
+
+        //Traverse projectiles in player
+        this.projectiles.traverse(function (node) {
+            if (node.data.alive == true){
+                node.data.update();
+            }
+            else
+            {
+                //Todo: Remove projectile from the linked list when "alive == false".
+                //this.projectiles.remove(node); //Doesnt work, produces error.
+            }
+        })
+
     }
 
 //Control for flipping rotation direction and firing (To be added).
     this.switchControl = function () {
         this.movDir = !this.movDir;
-        projectile.spawn(this.x, this.y, this.rot, 2.5);
+        this.projectiles.add(new Projectile(this.x, this.y, this.rot, 2.5))
     }
 
 
@@ -138,9 +148,12 @@ function Player() {
         context.fill();
         context.closePath();
 
-        if (projectile.alive == true)
-            projectile.draw(context);
+        this.projectiles.traverse(function (node) {
+            if (node.data.alive == true)
+            {
+                node.data.draw(context);
+            }
+        })
     }
-
 }
 

@@ -2,20 +2,13 @@
  * Created by ALAN on 29/01/2017.
  */
 //Projectile object.
-function Projectile() {
-    this.alive = false;
+function Projectile(x, y, angle, speed) {
 
-    this.spawn = function (x, y, angle, speed) {
-        this.x = x;
-        this.y = y;
-        this.rot = angle;
-        this.speed = speed;
-        this.alive = true;
-        console.log("Pos: " + this.x + " " + this.y);
-        console.log("Rot: " + this.rot);
-        console.log("Spe: " + this.speed);
-
-    }
+    this.x = x;
+    this.y = y;
+    this.rot = angle;
+    this.speed = speed;
+    this.alive = true;
 
     this.update = function () {
         //Move by 'speed' in the direction of 'rot'.
