@@ -6,15 +6,47 @@ describe("Tests projectile type", function(){
     var p;
 
     it("creates a new projectile", function(){
-        p = new Projectile();
+        p = new Projectile(10, 20, 0.5, 2);
         expect(p).toBeDefined();
-        p.spawn(10,20,0.5, 2);
         expect(p.x).toEqual(10.0);
         expect(p.y).toEqual(20.0);
         expect(p.rot).toEqual(0.5);
         expect(p.speed).toEqual(2);
 
     });
+
+    if("Destroys the projectile", function(){
+            p = new Projectile(10, 20, 0.5, 2);
+            p.destroy();
+            expect(p.x).toBe(null);
+            expect(p.y).toBe(null);
+            expect(p.rot).toBe(null);
+            expect(p.speed).toBe(null);
+            expect(p.projectiles).toEqual(new SinglyLinkedList());
+        });
+
+    it("creates a new player", function(){
+        p = new Player();
+        expect(p).toBeDefined();
+        expect(p.x).toEqual(0);
+        expect(p.y).toEqual(0);
+        expect(p.rot).toEqual(0);
+        expect(p.speed).toEqual(0.05);
+        expect(p.movDir).toBe(true);
+
+    });
+
+/*    it("Checks player switchControl", function(){
+        p = new Player();
+        expect(p).toBeDefined();
+        expect(p.x).toEqual(0);
+        expect(p.y).toEqual(0);
+        expect(p.rot).toEqual(0);
+        expect(p.speed).toEqual(0.05);
+        expect(p.movDir).toBe(true);
+
+    });*/
+
 /*
     it("Tells wheather a poisition is within the rectangle",function (){
         expect(r.width).toBeLessThan(41);
