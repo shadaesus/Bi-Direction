@@ -5,7 +5,7 @@
 describe("Tests projectile type", function(){
     var p;
 
-    it("creates a new projectile", function(){
+    it("Creates a new projectile", function(){
         p = new Projectile(10, 20, 0.5, 2);
         expect(p).toBeDefined();
         expect(p.x).toEqual(10.0);
@@ -15,17 +15,22 @@ describe("Tests projectile type", function(){
 
     });
 
-    if("Destroys the projectile", function(){
+    it("Destroys the projectile", function(){
             p = new Projectile(10, 20, 0.5, 2);
+
             p.destroy();
             expect(p.x).toBe(null);
             expect(p.y).toBe(null);
             expect(p.rot).toBe(null);
             expect(p.speed).toBe(null);
-            expect(p.projectiles).toEqual(new SinglyLinkedList());
+            expect(p.alive).toEqual(false);
         });
 
-    it("creates a new player", function(){
+});
+    describe("Tests projectile type", function(){
+        var p;
+
+    it("Creates a new player", function(){
         p = new Player();
         expect(p).toBeDefined();
         expect(p.x).toEqual(0);
@@ -33,9 +38,10 @@ describe("Tests projectile type", function(){
         expect(p.rot).toEqual(0);
         expect(p.speed).toEqual(0.05);
         expect(p.movDir).toBe(true);
-
+        expect(p.projectiles).toBe(new SinglyLinkedList());
     });
 
+});
 /*    it("Checks player switchControl", function(){
         p = new Player();
         expect(p).toBeDefined();
@@ -89,4 +95,3 @@ describe("Tests projectile type", function(){
         expect(r2.same).toBe(false);
 
     });*/
-});

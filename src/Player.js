@@ -19,29 +19,39 @@ function Player() {
         else
             this.rot += this.speed;
 
-        if (this.rot > Math.PI*2)
-            this.rot -= Math.PI*2;
-        if (this.rot < -Math.PI*2)
-            this.rot += Math.PI*2;
+        if (this.rot > Math.PI * 2)
+            this.rot -= Math.PI * 2;
+        if (this.rot < -Math.PI * 2)
+            this.rot += Math.PI * 2;
 
-        //Display how many projectiles are in the linked list.
-        console.log(this.projectiles.length());
+        //If projectile list is not empty, loop through projectiles and update or destroy.
+        if (this.projectiles._length > 0) {
+            //Get head node.
+            var node = this.projectiles.searchNodeAt(1);
 
-        //Traverse projectiles in player
-        this.projectiles.traverse(function (node) {
-            if (node.data.alive == true){
-                node.data.update();
+            var count = 1;
+           // console.log("l " + this.projectiles._length);
+
+            //Loop until next node is null.
+            while (node != null) {
+                if (node.data.alive === true) {
+                    //node.data.print();
+                    node.data.update();
+                    //console.log("c " + count);
+                    count++;
+                    node = node.next;
+                }
+                else {
+                    node = node.next;
+                    this.projectiles.remove(count);
+                }
+
             }
-            else
-            {
-                //Todo: Remove projectile from the linked list when "alive == false".
-              //  this.projectiles.remove(node); //Doesnt work, produces error.
-            }
-        })
+        }
 
     }
 
-//Control for flipping rotation direction and firing (To be added).
+    //Control for flipping rotation direction and firing (To be added).
     this.switchControl = function () {
         this.movDir = !this.movDir;
         this.projectiles.add(new Projectile(this.x, this.y, this.rot, 2.5))
@@ -64,11 +74,16 @@ function Player() {
         context.fill();
         context.closePath();
 
-        this.projectiles.traverse(function (node) {
-            if (node.data.alive == true)
-            {
+        //If projectile list is not empty, loop through projectiles and update or destroy.
+        if (this.projectiles._length > 0) {
+            //Get head node.
+            var node = this.projectiles.searchNodeAt(1);
+
+            //Loop until next node is null.
+            while (node != null) {
                 node.data.draw(context);
+                node = node.next;
             }
-        })
+        }
     }
 }

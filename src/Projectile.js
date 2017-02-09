@@ -18,7 +18,6 @@ function Projectile(x, y, angle, speed) {
         if (this.x > Game.width || this.x < 0 || this.y < 0 || this.y > Game.height)
         {
             this.destroy();
-            console.log("Bullet reset.");
         }
     }
 
@@ -27,10 +26,14 @@ function Projectile(x, y, angle, speed) {
         context.fillRect(this.x - 2, this.y - 2, 4, 4);
     }
     this.destroy = function () {
-        this.x = 0;
-        this.y = 0;
-        this.rot = 0;
-        this.speed = 0;
+        this.x = null;
+        this.y = null;
+        this.rot = null;
+        this.speed = null;
         this.alive = false;
+    }
+    this.print = function (){
+        console.log("P: (" + this.x + ", " + this.y + ")");
+
     }
 }
