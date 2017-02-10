@@ -16,9 +16,11 @@ function Enemy(targetx , targety) {
     //Todo: Create list for enemy projectiles.
     //this.projectiles = new SinglyLinkedList();
 
+    this.image = new Image();
     this.alive = true;
     console.log("x ", this.x, " y ", this.y, " tx ", targetx, "ty ", targety);
     console.log("r ", this.rot, "dx ", this.dx, "dy ", this.dy);
+
 
 //Updates the rotation of the player.
     this.update = function () {
@@ -60,12 +62,23 @@ function Enemy(targetx , targety) {
 
     this.draw = function (context) {
 
-        //Create a 8x8 pixel filled rectangle at the position of [x,y]
+        // use this code for square enmies filled with colour
+   /*     //Create a 8x8 pixel filled rectangle at the position of [x,y]
         context.beginPath();
         context.fillStyle = "red";
         context.fill();
         context.fillRect(this.x - 4, this.y - 4, 8, 8);
-        context.closePath();
+        context.closePath();*/
+
+
+        context.beginPath();
+        context.arc(Game.width / 2, Game.height / 2, 3, 0, Math.PI * 2, false);
+        context.fillStyle = "blue";
+        context.fill();
+        this.image.src = "images/ast1.png";
+        context.drawImage(this.image, this.x - this.image.width /2, this.y - this.image.height/2);
+
+
 
         /*
 

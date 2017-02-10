@@ -10,6 +10,8 @@ function Player() {
     this.rot = 0;
     this.speed = 0.05;
     this.movDir = true;
+    this.planetImage = new Image();
+    this.playerImage = new Image();
     this.projectiles = new SinglyLinkedList();
 
 //Updates the rotation of the player.
@@ -64,11 +66,14 @@ function Player() {
         this.x = (Game.width / 2) + 30 * Math.cos(this.rot);
         this.y = (Game.height / 2) + 30 * Math.sin(this.rot);
 
+        // Use this code if you wish to use colours
         //Create a 8x8 pixel filled rectangle at the position of [x,y]
         context.beginPath();
         context.fillStyle = "green";
         context.fill();
         context.fillRect(this.x - 4, this.y - 4, 8, 8);
+        this.playerImage.src = "images/saucer1.png";
+        context.drawImage(this.playerImage, this.x - this.playerImage.width /2, this.y  - this.playerImage.height / 2);
         //context.closePath();
 
 
@@ -77,8 +82,8 @@ function Player() {
         context.arc(Game.width / 2, Game.height / 2, 20, 0, Math.PI * 2, false);
         context.fillStyle = "blue";
         context.fill();
-       //context.closePath();
-
+        this.planetImage.src = "images/star.png";
+        context.drawImage(this.planetImage, Game.width / 2 - this.planetImage.width /2, Game.height / 2 - this.planetImage.height / 2);
 
         console.log(this.projectiles._length);
 

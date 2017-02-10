@@ -29,7 +29,6 @@ var Game = {
     player: new Player(),
     enemyList: new SinglyLinkedList(),
     enemy: new Enemy(),
-
 };
 
 //Does animation stuff, need to look into how this actually works.
