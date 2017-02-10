@@ -7,6 +7,17 @@ window.addEventListener("keyup", keyboardControls, false);
 function keyboardControls(e) {
     if (e.keyCode == ("32"))
         Game.player.switchControl();
+    if (e.keyCode == ("69"))        //Todo: Add enemy to enemyList.
+        enemyadd();
+        //this.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+}
+
+function enemyadd(){
+    Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+
+    //Enemy e = new Enemy(x,y);
+    //Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+
 }
 
 //Game object.
@@ -16,6 +27,8 @@ var Game = {
     height: 480,
     time: 0,
     player: new Player(),
+    enemyList: new SinglyLinkedList(),
+    enemy: new Enemy(),
 
 };
 
@@ -63,6 +76,7 @@ Game.start = function () {
     Game.canvas.width = Game.width;
     Game.canvas.height = Game.height;
     console.log("start");
+
     //Retrives a copy of the context.
     Game.context = Game.canvas.getContext("2d");
 
@@ -74,17 +88,65 @@ Game.start = function () {
     //Instantiates a new player.
     Game.player = new Player();
 
+    Game.enemyList = new SinglyLinkedList();
+
+    Game.enemy = new Enemy(Game.width/2, Game.height/2);
+
     //Dont know what this does yet.
     Game._onEachFrame(Game.run);
 };
 
 Game.update = function () {
     Game.player.update();
+    Game.enemy.update();
+
+    Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+    //If projectile list is not empty, loop through projectiles and update or destroy.
+    if (this.enemyList._length > 0) {
+        //Get head node.
+        var node = this.enemyList.searchNodeAt(1);
+
+        //context.fillStyle = "yellow";
+
+        //Loop until next node is null.
+        while (node != null) {
+            node.data.update();
+            node = node.next;
+        }
+    }
+
 };
 
 Game.draw = function () {
     Game.context.clearRect(0, 0, Game.width, Game.height);
+    //context.fillStyle = "black";
+    /*
+    Player
+        Platform
+        Planet
+        Projectiles
+    Enemy
+
+     */
+
+
     Game.player.draw(Game.context);
+    Game.enemy.draw(Game.context);
+
+    //If projectile list is not empty, loop through projectiles and update or destroy.
+    if (this.enemyList._length > 0) {
+        //Get head node.
+        var node = this.enemyList.searchNodeAt(1);
+
+        //context.fillStyle = "yellow";
+
+        //Loop until next node is null.
+        while (node != null) {
+            node.data.draw(Game.context);
+            node = node.next;
+        }
+    }
+
 };
 
 
