@@ -23,7 +23,12 @@ function Projectile(x, y, angle, speed) {
 
     this.draw = function (context) {
         //Create a 4x4 pixel filled rectangle at the position of [x,y]
+        context.beginPath();
+        //context.fillStyle = "yellow";
+        context.fill();
         context.fillRect(this.x - 2, this.y - 2, 4, 4);
+        //        context.closePath();
+
     }
     this.destroy = function () {
         this.x = null;
