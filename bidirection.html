@@ -2,6 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+
+    <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyC77vEFN_A2GsHKvKND9df91lN7QWYYYWQ",
+            authDomain: "bi-direction.firebaseapp.com",
+            databaseURL: "https://bi-direction.firebaseio.com",
+            storageBucket: "bi-direction.appspot.com",
+            messagingSenderId: "83393585378"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+
     <title>Bi-Direction</title>
     <script src="src/Projectile.js"></script>
     <script src="src/Player.js"></script>
@@ -9,11 +26,147 @@
     <script src="src/LinkedList.js"></script>
     <script src="game.js"></script>
 </head>
-<body onload="Game.start()">
+<body>
+<label for="name">Name:</label><input type="text" id="name"/><br/>
+<label for="x">X:</label><input type="number" id="x"/><br/>
+<label for="y">Y:</label><input type="number" id="y"/><br/>
+<button id="post">Post Data</button><br/>
+<textarea id="result" cols="60" rows="10"></textarea>
+
 <canvas id = "canvas" width="640" height="480" style="border: solid;">
     Canvas not supported.
 </canvas>
 
 
 </body>
+<script>
+    var fb = firebase.database(),
+        locations = {},
+        result_box = document.getElementById("result");
+    if (fb) {
+        // This gets a reference to the 'location" node.
+           var fbLocation = fb.ref("/location");
+           // Now we can install event handlers for nodes added, changed and removed.
+          fbLocation.on('child_added', function(sn){
+              var data = sn.val();
+              console.dir({'added': data});
+              locations[sn.key] = data;
+              showLocations();
+          });
+          fbLocation.on('child_changed', function(sn){
+              var data = sn.val();
+              locations[sn.key] = data;
+              console.dir({'moved': data})
+              showLocations();
+          });
+          fbLocation.on('child_removed', function(sn){
+              var data  = sn.val();
+              delete locations[sn.key];
+              console.dir(({'removed': data}));
+              showLocations();
+          });
+    }
+
+    function getKey(name){
+        var loc;
+        for(loc in locations){
+            if(locations[loc].player === name){
+                return loc;
+            }
+        }
+        return null;
+    }
+    function addLocation(name, x, y) {
+// Prevent a duplicate name...
+        if (getKey(name)) return;
+// Name is valid - go ahead and add it...
+        fb.ref("/location").push({
+            player: name,
+            x: x,
+            y:y,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        }, function(err) {
+            if(err) console.dir(err);
+        });
+    }
+    function updateLocation(ref, name, x, y){
+        fb.ref("/location/" + ref).set({
+            player: name,
+            x: x,
+            y: y,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        }, function(err) {
+            if(err) {
+                console.dir(err);
+            }
+        });
+    }
+    function getKey(name){
+        var loc;
+        for(loc in locations){
+            if(locations[loc].player === name){
+                return loc;
+            }
+        }
+        return null;
+    }
+    function addLocation(name, x, y) {
+        // Prevent a duplicate name...
+           if (getKey(name)) return;
+           // Name is valid - go ahead and add it...
+           fb.ref("/location").push({
+               player: name,
+               x: x,
+               y: y,
+               timestamp: firebase.database.ServerValue.TIMESTAMP
+           }, function(err) {
+               if(err) console.dir(err);
+           });
+    }
+    function updateLocation(ref, name, x, y){
+        fb.ref("/location/" + ref).set({
+            player: name,
+            x: x,
+            y: y,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        }, function(err) {
+            if(err) {
+                console.dir(err);
+            }
+        });
+    }
+    function  removeLocation(ref) {
+        fb.ref("/location/" + ref).set(null, function (err) {
+            if (err) console.dir(err);
+        });
+    }
+
+    document.getElementById("post").addEventListener("click", function() {
+        var x, y, name;
+        name = $("#name").val();
+        x = $("#x").val();
+        y = $("#y").val();
+        addLocation(name, x, y);
+    });
+
+    function formatPlayerInfo(location) {
+        "use strict";
+        var info = location + ":", loc = locations[location];
+        info += loc.player + " @ (" + loc.x + ", " + loc.y + ") - " + loc.timestamp + "\n";
+        return info;
+    }
+
+    function showLocations() {
+        "use strict";
+        var loc, info = "";
+        for (loc in locations) {
+            info += formatPlayerInfo(loc);
+        }
+        result_box.innerText = info;
+    }
+
+</script>
+
+
+
 </html>
