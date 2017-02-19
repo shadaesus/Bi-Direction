@@ -27,7 +27,9 @@ describe("Tests projectile type", function(){
         });
 
 });
-    describe("Tests projectile type", function(){
+
+//Player
+    describe("Tests player type", function(){
         var p;
 
     it("Creates a new player", function(){
@@ -42,6 +44,20 @@ describe("Tests projectile type", function(){
     });
 
 });
+
+    //Linked list
+describe("Tests linked list type", function(){
+    var p;
+
+    it("Creates a new linked list", function(){
+        ll = new DoublyList();
+        expect(p._length).toEqual(0);
+        expect(p.head).toEqual(null);
+        expect(p.tail).toEqual(null);
+    });
+
+});
+
 /*    it("Checks player switchControl", function(){
         p = new Player();
         expect(p).toBeDefined();

@@ -2,84 +2,80 @@
  * Created by Bell on 10/02/2017.
  */
 
+
+var incr = (function () {
+    var i = 1;
+
+    return function () {
+        return i++;
+    }
+})();
+
+//Todo: Track position of target using observer pattern.
+
 //Enemy object.
 function Enemy(targetx , targety) {
+    //Generates random start position within window boundaries.
     this.x = Math.floor((Math.random() * 640) + 1);
     this.y = Math.floor((Math.random() * 480) + 1);
-    //Todo: Track position of target using observer pattern.
-    //Todo: Calculate rotation on initialisation.
-    this.dx = this.x - targetx;
-    this.dy = this.y - targety;
 
-    this.rot = Math.atan2(this.dx, this.dy);
+    this.id = incr();
+
+    this.rot = Math.atan2(this.x - targetx, this.y - targety);
     this.speed = 0.5;
+
     //Todo: Create list for enemy projectiles.
     //this.projectiles = new SinglyLinkedList();
 
+    this.image = new Image();
     this.alive = true;
-    console.log("x ", this.x, " y ", this.y, " tx ", targetx, "ty ", targety);
-    console.log("r ", this.rot, "dx ", this.dx, "dy ", this.dy);
 
 //Updates the rotation of the player.
     this.update = function () {
-        //Move in direction of rot by speed.
-        this.x -= this.speed * Math.sin(this.rot);
-        this.y -= this.speed * Math.cos(this.rot);
+        if (this.alive) {
+            //Move in direction of rot by speed.
+            this.x -= this.speed * Math.sin(this.rot);
+            this.y -= this.speed * Math.cos(this.rot);
 
-        if (this.rot > Math.PI * 2)
-            this.rot -= Math.PI * 2;
-        if (this.rot < -Math.PI * 2)
-            this.rot += Math.PI * 2;        //console.log(this.rot);
-        /*
-         //If projectile list is not empty, loop through projectiles and update or destroy.
-         if (this.projectiles._length > 0) {
-         //Get head node.
-         var node = this.projectiles.searchNodeAt(1);
+            if (this.rot > Math.PI * 2)
+                this.rot -= Math.PI * 2;
+            if (this.rot < -Math.PI * 2)
+                this.rot += Math.PI * 2;        //console.log(this.rot);
 
-         var count = 1;
-         // console.log("l " + this.projectiles._length);
-
-         //Loop until next node is null.
-         while (node != null) {
-         if (node.data.alive === true) {
-         //node.data.print();
-         node.data.update();
-         //console.log("c " + count);
-         count++;
-         node = node.next;
-         }
-         else {
-         node = node.next;
-         this.projectiles.remove(count);
-         }
-
-         }
-         }
-         */
+            if (this.x > 310 && this.x < 330 && this.y > 230 && this.y < 250)
+                this.destroy();
+        }
     }
 
     this.draw = function (context) {
 
-        //Create a 8x8 pixel filled rectangle at the position of [x,y]
-        context.beginPath();
-        context.fillStyle = "red";
-        context.fill();
-        context.fillRect(this.x - 4, this.y - 4, 8, 8);
-        context.closePath();
+        if (this.alive === true) {
+            context.beginPath();
+            context.arc(Game.width / 2, Game.height / 2, 3, 0, Math.PI * 2, false);
+            context.fillStyle = "blue";
+            context.fill();
+            this.image.src = "images/ast1.png";
+            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
 
-        /*
+        }
+    }
 
-         //If projectile list is not empty, loop through projectiles and update or destroy.
-         if (this.projectiles._length > 0) {
-         //Get head node.
-         var node = this.projectiles.searchNodeAt(1);
+    //Destroys the Enemy object.
+    this.destroy = function () {
+        this.x = null;
+        this.y = null;
+        this.id = null;
+        this.rot = null;
+        this.speed = null;
+        this.image = null;
+        this.alive = false;
+    }
 
-         //Loop until next node is null.
-         while (node != null) {
-         node.data.draw(context);
-         node = node.next;
-         }
-         }
-         }*/
+    //Prints the Enemy object.
+    this.print = function () {
+        console.log("Enemy #", this.id);
+        console.log("x ", this.x, " y ", this.y);
+        console.log("r ", this.rot, "s ", this.speed);
+        console.log("a ", this.alive, "i ", this.image);
     }
 }
