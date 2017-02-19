@@ -7,17 +7,16 @@ window.addEventListener("keyup", keyboardControls, false);
 function keyboardControls(e) {
     if (e.keyCode == ("32"))
         Game.player.switchControl();
+    if (e.keyCode == ("79"))
+        Game.start();
+    if (e.keyCode == ("80")) {
+        Game.pause = !Game.pause;
+        console.log("Pause status: " + Game.pause);
+    }
+        if (e.keyCode == ("67"))
+        window.location.reload();
     if (e.keyCode == ("69"))        //Todo: Add enemy to enemyList.
-        enemyadd();
-        //this.enemyList.add(new Enemy(Game.width/2, Game.height/2));
-}
-
-function enemyadd(){
-    Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
-
-    //Enemy e = new Enemy(x,y);
-    //Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
-
+        Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
 }
 
 //Game object.
@@ -27,8 +26,8 @@ var Game = {
     height: 480,
     time: 0,
     player: new Player(),
-    enemyList: new SinglyLinkedList(),
-    enemy: new Enemy(),
+    enemyList: new DoublyList(),
+    pause: false,
 };
 
 //Does animation stuff, need to look into how this actually works.
@@ -59,7 +58,8 @@ Game.run = (function () {
     return function () {
 
         while ((new Date).getTime() > nextGameTick) {
-            Game.update();
+            if (Game.pause == false)
+                Game.update();
             nextGameTick += skipTicks;
             loops++;
         }
@@ -70,11 +70,13 @@ Game.run = (function () {
 
 //Sets up the Game object.
 Game.start = function () {
+    //Announce game start
+    console.log("Game Start");
+
     //Retrieves the canvas from the html file.
     Game.canvas = document.getElementById("canvas");
     Game.canvas.width = Game.width;
     Game.canvas.height = Game.height;
-    console.log("start");
 
     //Retrives a copy of the context.
     Game.context = Game.canvas.getContext("2d");
@@ -82,62 +84,64 @@ Game.start = function () {
     //Dont know what this does yet.
     document.body.appendChild(Game.canvas);
 
-    console.log("Line test")
-
     //Instantiates a new player.
     Game.player = new Player();
 
-    Game.enemyList = new SinglyLinkedList();
-
-    Game.enemy = new Enemy(Game.width/2, Game.height/2);
+    Game.enemyList = new DoublyList();
 
     //Dont know what this does yet.
     Game._onEachFrame(Game.run);
 };
 
 Game.update = function () {
-    Game.player.update();
-    Game.enemy.update();
 
-    Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+    Game.player.update();
+
+    // Always have 3 enemies
+    //if (Game.enemyList._length < 5)
+    //    Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+
     //If projectile list is not empty, loop through projectiles and update or destroy.
     if (this.enemyList._length > 0) {
-        //Get head node.
-        var node = this.enemyList.searchNodeAt(1);
 
-        //context.fillStyle = "yellow";
+        var node = this.enemyList.head;
 
-        //Loop until next node is null.
+        //Update loop
         while (node != null) {
-            node.data.update();
+            node.data.update(Game.context);
             node = node.next;
         }
-    }
 
+        //Reset for remove loop
+        node = this.enemyList.head;
+
+        var count = 0;
+
+        //Remove loop
+        while (count < this.enemyList._length) {
+
+            //Destroy the enemy
+            if (node.data.alive == false)
+            {
+                this.enemyList.searchAndRemove(node.data);
+                break;
+            }
+            else
+                node = node.next;
+
+            count++;
+        }
+    }
 };
 
 Game.draw = function () {
     Game.context.clearRect(0, 0, Game.width, Game.height);
-    //context.fillStyle = "black";
-    /*
-    Player
-        Platform
-        Planet
-        Projectiles
-    Enemy
-
-     */
-
-
     Game.player.draw(Game.context);
-    Game.enemy.draw(Game.context);
 
     //If projectile list is not empty, loop through projectiles and update or destroy.
     if (this.enemyList._length > 0) {
         //Get head node.
-        var node = this.enemyList.searchNodeAt(1);
-
-        //context.fillStyle = "yellow";
+        var node = this.enemyList.head;
 
         //Loop until next node is null.
         while (node != null) {
@@ -145,7 +149,6 @@ Game.draw = function () {
             node = node.next;
         }
     }
-
 };
 
 

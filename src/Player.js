@@ -12,7 +12,7 @@ function Player() {
     this.movDir = true;
     this.planetImage = new Image();
     this.playerImage = new Image();
-    this.projectiles = new SinglyLinkedList();
+    this.projectiles = new DoublyList();
 
 //Updates the rotation of the player.
     this.update = function () {
@@ -85,7 +85,7 @@ function Player() {
         this.planetImage.src = "images/star.png";
         context.drawImage(this.planetImage, Game.width / 2 - this.planetImage.width /2, Game.height / 2 - this.planetImage.height / 2);
 
-        console.log(this.projectiles._length);
+        //console.log(this.projectiles._length);
 
         //If projectile list is not empty, loop through projectiles and update or destroy.
         if (this.projectiles._length > 0) {
