@@ -28,10 +28,20 @@
 </head>
 <body>
 
+<label for="name">Name:</label><input type="text" id="name"/><br/>
+<label for="x">X:</label><input type="number" id="x"/><br/>
+<label for="y">Y:</label><input type="number" id="y"/><br/>
+<button id="post">Post Data</button><br/>
+<textarea id="result" cols="60" rows="10"></textarea>
+
+
 <img src="images/star.png" onclick="Game.start()"/>
 <p>
 
 
+    <canvas id = "canvas" width="640" height="480" style="border: solid;">
+        Canvas not supported.
+    </canvas>
 
 </body>
 <script>
