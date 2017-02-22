@@ -1,7 +1,16 @@
 /**
  * Created by ALAN on 29/01/2017.
  */
-//Projectile object.
+
+
+/**
+ * Takess x and y positions as well rottaional direction and speed.
+ * @param {integer} x
+ * @param {integer} y
+ * @param {integer} angle
+ * @param {integer} speed
+ * @constructor
+ */
 function Projectile(x, y, angle, speed) {
 
     this.x = x;
