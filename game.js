@@ -111,7 +111,7 @@ Game.update = function () {
 
 
     //Always have 3 enemies
-    if (Game.enemyList._length < 3)
+    if (Game.enemyList._length < 5)
         Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
 
     //If projectile list is not empty, loop through projectiles and update or destroy.
