@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
 
-
+    <script src=""></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
     <script>
         // Initialize Firebase
         var config = {
@@ -30,13 +31,13 @@
 <body>
 
 <label for="name">Name:</label><input type="text" id="name"/><br/>
-<label for="x">X:</label><input type="number" id="x"/><br/>
-<label for="y">Y:</label><input type="number" id="y"/><br/>
+<label for="x">Score:</label><input type="number" id="x"/><br/>
 <button id="post">Post Data</button><br/>
 <textarea id="result" cols="60" rows="10"></textarea>
 
 
 <img src="images/star.png" onclick="Game.start()"/>
+
 <p>
 
 
@@ -82,24 +83,24 @@
         }
         return null;
     }
-    function addLocation(name, x, y) {
+
+    function addLocation(name, x) {
 // Prevent a duplicate name...
         if (getKey(name)) return;
 // Name is valid - go ahead and add it...
         fb.ref("/location").push({
             player: name,
             x: x,
-            y:y,
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }, function(err) {
             if(err) console.dir(err);
         });
     }
-    function updateLocation(ref, name, x, y){
+
+    function updateLocation(ref, name, x){
         fb.ref("/location/" + ref).set({
             player: name,
             x: x,
-            y: y,
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }, function(err) {
             if(err) {
@@ -116,24 +117,23 @@
         }
         return null;
     }
-    function addLocation(name, x, y) {
+    function addLocation(name, x) {
         // Prevent a duplicate name...
         if (getKey(name)) return;
         // Name is valid - go ahead and add it...
         fb.ref("/location").push({
             player: name,
             x: x,
-            y: y,
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }, function(err) {
             if(err) console.dir(err);
         });
     }
-    function updateLocation(ref, name, x, y){
+
+    function updateLocation(ref, name, x){
         fb.ref("/location/" + ref).set({
             player: name,
             x: x,
-            y: y,
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }, function(err) {
             if(err) {
@@ -141,6 +141,7 @@
             }
         });
     }
+
     function  removeLocation(ref) {
         fb.ref("/location/" + ref).set(null, function (err) {
             if (err) console.dir(err);
@@ -148,17 +149,16 @@
     }
 
     document.getElementById("post").addEventListener("click", function() {
-        var x, y, name;
+        var x, name;
         name = $("#name").val();
         x = $("#x").val();
-        y = $("#y").val();
-        addLocation(name, x, y);
+        addLocation(name, x);
     });
 
     function formatPlayerInfo(location) {
         "use strict";
         var info = location + ":", loc = locations[location];
-        info += loc.player + " @ (" + loc.x + ", " + loc.y + ") - " + loc.timestamp + "\n";
+        info += loc.player + " @ (" + loc.x + ") - " + loc.timestamp + "\n";
         return info;
     }
 
@@ -172,7 +172,6 @@
     }
 
 </script>
-
 
 
 </html>

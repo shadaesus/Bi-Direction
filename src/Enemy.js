@@ -23,17 +23,21 @@ var incr = (function () {
  * @constructor
  */
 function Enemy(targetx , targety) {
-    //Generates random start position within window boundaries.
-    this.x = Math.floor((Math.random() * 640) + 1);
+    //Generates random start position outside the canvas
+    // Round(Math.Random()) = 0 || 1
+    this.x = Math.round(Math.random()) * (640 + 50) - 50;
     this.y = Math.floor((Math.random() * 480) + 1);
 
+    var maxW = 30, minW = 20;
+
+    this.width = Math.random() * (maxW - minW) + minW;
     this.id = incr();
 
     this.rot = Math.atan2(this.x - targetx, this.y - targety);
     this.speed = 0.5;
 
     //Todo: Create list for enemy projectiles.
-    //this.projectiles = new SinglyLinkedList();
+    this.projectiles = new DoublyList();
 
     this.image = new Image();
     this.alive = true;
@@ -50,21 +54,27 @@ function Enemy(targetx , targety) {
             if (this.rot < -Math.PI * 2)
                 this.rot += Math.PI * 2;        //console.log(this.rot);
 
-            if (this.x > 310 && this.x < 330 && this.y > 230 && this.y < 250)
-                this.destroy();
+            //if (this.x > 310 && this.x < 330 && this.y > 230 && this.y < 250)
+            //    this.destroy();
         }
     }
 
     this.draw = function (context) {
 
         if (this.alive === true) {
-            context.beginPath();
-            context.arc(Game.width / 2, Game.height / 2, 3, 0, Math.PI * 2, false);
-            context.fillStyle = "blue";
-            context.fill();
-            this.image.src = "images/ast1.png";
-            context.drawImage(this.image, this.x - this.image.width / 2, this.y - this.image.height / 2);
-
+            if(Game.image_bool == true){
+                this.image.src = "images/asteroid1.png";
+                context.save();
+                context.translate(this.x - this.width /2,this.y - this.width /2);
+                context.scale(this.width / this.image.width, this.width / this.image.width);
+                context.drawImage(this.image, 0, 0);
+                context.restore();
+            } else {
+                context.beginPath();
+                context.fill();
+                context.fillStyle = "red";
+                context.fillRect(this.x - this.width / 2, this.y - this.width / 2, this.width, this.width);
+            }
         }
     }
 

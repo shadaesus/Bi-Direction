@@ -10,12 +10,19 @@
 function Player() {
     this.x = 0;
     this.y = 0;
+    this.width = 16;
+    this.height = 4;
+    this.radius = 20;;
+    this.orbit = 5;
     this.rot = 0;
-    this.speed = 0.05;
+    this.health = 5;
+    this.speed = 0.025;
     this.movDir = true;
     this.planetImage = new Image();
     this.playerImage = new Image();
     this.projectiles = new DoublyList();
+    this.playerImage.src = "images/ship.png";
+    this.planetImage.src = "images/planet1.png";
 
 
 //Updates the rotation of the player.
@@ -30,28 +37,40 @@ function Player() {
         if (this.rot < -Math.PI * 2)
             this.rot += Math.PI * 2;
 
-        //If projectile list is not empty, loop through projectiles and update or destroy.
+        //Calculate the position of the player in accordance to the "this.rot" value.
+        this.x = (Game.width / 2) + (this.radius + this.orbit) * Math.cos(this.rot);
+        this.y = (Game.height / 2) + (this.radius + this.orbit) * Math.sin(this.rot);
+
+        //console.log(this.projectiles._length);
+
         if (this.projectiles._length > 0) {
-            //Get head node.
-            var node = this.projectiles.searchNodeAt(1);
 
-            var count = 1;
-           // console.log("l " + this.projectiles._length);
+            var node = this.projectiles.head;
 
-            //Loop until next node is null.
+            //Update loop
             while (node != null) {
-                if (node.data.alive === true) {
-                    //node.data.print();
-                    node.data.update();
-                    //console.log("c " + count);
-                    count++;
-                    node = node.next;
-                }
-                else {
-                    node = node.next;
-                    this.projectiles.remove(count);
-                }
+                node.data.update(Game.context);
+                node = node.next;
+            }
 
+            //Reset for remove loop
+            node = this.projectiles.head;
+
+            var count = 0;
+
+            //Remove loop
+            while (count < this.projectiles._length) {
+
+                //Destroy the node
+                if (node.data.alive == false)
+                {
+                    this.projectiles.searchAndRemove(node.data);
+                    break;
+                }
+                else
+                    node = node.next;
+
+                count++;
             }
         }
 
@@ -66,30 +85,43 @@ function Player() {
 
     this.draw = function (context) {
 
-        //Calculate the position of the player in accordance to the "this.rot" value.
-        this.x = (Game.width / 2) + 30 * Math.cos(this.rot);
-        this.y = (Game.height / 2) + 30 * Math.sin(this.rot);
 
-        // Use this code if you wish to use colours
-        //Create a 8x8 pixel filled rectangle at the position of [x,y]
-        context.beginPath();
-        context.fillStyle = "green";
-        context.fill();
-        context.fillRect(this.x - 4, this.y - 4, 8, 8);
-        this.playerImage.src = "images/saucer1.png";
-        context.drawImage(this.playerImage, this.x - this.playerImage.width /2, this.y  - this.playerImage.height / 2);
-        //context.closePath();
+        if (Game.image_bool == true) {
 
+            context.save();
+            context.translate(Game.width / 2, Game.height / 2)
+            context.scale(this.radius * 4 / this.planetImage.width, this.radius * 4 / this.planetImage.height);
+            context.drawImage(this.planetImage, -this.radius / 2, -this.radius / 2, this.radius, this.radius);
+            context.restore();
 
-        //Create a 20r circle at the center of the screen.
-        context.beginPath();
-        context.arc(Game.width / 2, Game.height / 2, 20, 0, Math.PI * 2, false);
-        context.fillStyle = "blue";
-        context.fill();
-        this.planetImage.src = "images/star.png";
-        context.drawImage(this.planetImage, Game.width / 2 - this.planetImage.width /2, Game.height / 2 - this.planetImage.height / 2);
+            context.save();
+            context.translate(this.x, this.y);
+            context.rotate(Math.PI / 2);
+            context.rotate(this.rot);
+            context.scale(this.width / this.playerImage.width, this.height / this.playerImage.height);
+            context.drawImage(this.playerImage, -this.width * 2, this.height * 2);
+            context.restore();
 
-        //console.log(this.projectiles._length);
+        } else {
+            //Create a 20r circle at the center of the screen.
+            context.beginPath();
+            context.arc(Game.width / 2, Game.height / 2, this.radius, 0, Math.PI * 2, false);
+            context.fillStyle = "blue";
+            context.fill();
+
+            //Player ship
+            context.beginPath();
+            context.fillStyle = "green";
+            context.fill();
+
+            context.save();
+            context.translate(320, 240);
+            context.rotate(-Math.PI / 2);
+            context.rotate(this.rot);
+            context.fillRect(-this.width / 2, this.radius + this.orbit - this.height / 2, this.width, this.height);
+            context.restore();
+        }
+
 
         //If projectile list is not empty, loop through projectiles and update or destroy.
         if (this.projectiles._length > 0) {
@@ -105,5 +137,6 @@ function Player() {
             }
         }
     }
+
 }
 
