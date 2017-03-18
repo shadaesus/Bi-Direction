@@ -22,14 +22,14 @@ function keyboardControls(e) {
         console.log("Pause status: " + Game.pause);
     }
     if (e.keyCode == ("69")) //E
-        Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+        Game.enemyList.add(new Enemy(Game.width/2, Game.height/2, Math.floor(Math.random() * 2)));
 }
 
 //Game object.
 var Game = {
     fps: 60,
-    width: 640,
-    height: 480,
+    width: 800,
+    height: 600,
     time: 0,
     player: new Player(),
     enemyList: new DoublyList(),
@@ -119,7 +119,7 @@ Game.update = function () {
 
     //Always have 3 enemies
     if (Game.enemyList._length < 5)
-        Game.enemyList.add(new Enemy(Game.width/2, Game.height/2));
+        Game.enemyList.add(new Enemy(Game.width/2, Game.height/2, Math.floor(Math.random() * 2)));
 
     //If projectile list is not empty, loop through projectiles and update or destroy.
     if (this.enemyList._length > 0) {
@@ -127,11 +127,11 @@ Game.update = function () {
         var enemynode = this.enemyList.head;
         var snd;
 
-        var plx = 320, ply = 240, plr = 20;
+        var plx = Game.width/2, ply = Game.height/2, plr = 20;
 
-        //Update loop
+        //Update each enemy
         while (enemynode != null) {
-            enemynode.data.update(Game.context);
+            enemynode.data.update();
 
             var enx = enemynode.data.x, eny = enemynode.data.y, enr = enemynode.data.width/2;
 

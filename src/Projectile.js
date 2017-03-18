@@ -26,6 +26,7 @@ function Projectile(x, y, angle, speed) {
         this.x += this.speed * Math.cos(this.rot);
         this.y += this.speed * Math.sin(this.rot);
 
+        //Destroy if outside of canvas
         if (this.x > Game.width || this.x < 0 || this.y < 0 || this.y > Game.height)
         {
             this.destroy();

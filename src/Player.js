@@ -49,7 +49,7 @@ function Player() {
 
             //Update loop
             while (node != null) {
-                node.data.update(Game.context);
+                node.data.update();
                 node = node.next;
             }
 
@@ -60,16 +60,13 @@ function Player() {
 
             //Remove loop
             while (count < this.projectiles._length) {
-
                 //Destroy the node
-                if (node.data.alive == false)
-                {
+                if (node.data.alive == false){
                     this.projectiles.searchAndRemove(node.data);
                     break;
                 }
                 else
                     node = node.next;
-
                 count++;
             }
         }
@@ -115,7 +112,7 @@ function Player() {
             context.fill();
 
             context.save();
-            context.translate(320, 240);
+            context.translate(Game.width/2, Game.height/2);
             context.rotate(-Math.PI / 2);
             context.rotate(this.rot);
             context.fillRect(-this.width / 2, this.radius + this.orbit - this.height / 2, this.width, this.height);
@@ -123,7 +120,7 @@ function Player() {
         }
 
 
-        //If projectile list is not empty, loop through projectiles and update or destroy.
+        //If projectile list is not empty, loop through projectiles draw.
         if (this.projectiles._length > 0) {
             //Get head node.
             var node = this.projectiles.searchNodeAt(1);

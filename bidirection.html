@@ -7,7 +7,6 @@
     <script src=""></script>
     <script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
 
-
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <script>
@@ -163,6 +162,7 @@
         info += loc.player + " @ (" + loc.x + ") - " + loc.timestamp + "\n";
         return info;
     }
+
     function getPlayerInfo(location) {
         "use strict";
         var loc = locations[location];
@@ -170,14 +170,14 @@
         return info;
     }
 
-
     function showLocations() {
         "use strict";
         var loc, info = "";
         for (loc in locations) {
             info += getPlayerInfo(loc);
+
         }
-        result_box.innerText = "High Score Table \n" + info;
+        result_box.innerText = "High Score Table \n" + info + "\n";
     }
 
 </script>
