@@ -32,9 +32,9 @@ function Player() {
         else
             this.rot += this.speed;
 
-        if (this.rot > Math.PI * 2)
+        if (this.rot > Math.PI )
             this.rot -= Math.PI * 2;
-        if (this.rot < -Math.PI * 2)
+        if (this.rot < -Math.PI )
             this.rot += Math.PI * 2;
 
         //Calculate the position of the player in accordance to the "this.rot" value.
@@ -76,6 +76,7 @@ function Player() {
     //Control for flipping rotation direction and firing (To be added).
     this.switchControl = function () {
         this.movDir = !this.movDir;
+        console.log(this.rot);
         this.projectiles.add(new Projectile(this.x, this.y, this.rot, 2.5))
     }
 

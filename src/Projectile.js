@@ -31,6 +31,9 @@ function Projectile(x, y, angle, speed) {
         {
             this.destroy();
         }
+        if (this.x > Game.width/2 - 5 && this.x < Game.width/2 + 5 && this.y > Game.height/2 - 5 && this.y < Game.height/2 + 5)
+            this.destroy();
+
     }
 
     this.draw = function (context) {

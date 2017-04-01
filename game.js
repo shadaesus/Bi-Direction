@@ -41,7 +41,6 @@ var Game = {
     //Matter.js
 
 };
-
 //Does animation stuff, need to look into how this actually works.
 Game._onEachFrame = (function () {
     var requestAnimationFrame = window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame;
@@ -51,7 +50,7 @@ Game._onEachFrame = (function () {
             var _cb = function () {
                 cb();
                 requestAnimationFrame(_cb);
-            }
+            };
             _cb();
         };
     } else {
@@ -127,7 +126,8 @@ Game.update = function () {
         var enemynode = this.enemyList.head;
         var snd;
 
-        var plx = Game.width/2, ply = Game.height/2, plr = 20;
+        var plx = Game.width/2, ply = this.height/2, plr = 20;
+        var psx = Game.player.x, psy = Game.player.y, psr = 8;
 
         //Update each enemy
         while (enemynode != null) {
@@ -158,14 +158,42 @@ Game.update = function () {
                         this.score ++;
                         var snd = new Audio("Sounds/rocks.wav"); // buffers automatically when created
                         snd.play();
-                        console.log("BOOM!");
+                        console.log("BANG! Target down.");
                     }
 
                     projectilenode = projectilenode.next;
                 }
             }
 
+            //Check collisions to the players ship.
+            if (enemynode.data.projectiles._length > 0) {
+                var projectilenode = enemynode.data.projectiles.head;
 
+                while (projectilenode != null){
+
+                    var erx = projectilenode.data.x, ery = projectilenode.data.y, err = projectilenode.data.width/2;
+
+                    //Collision with ship
+                    if (SimpleCollision(erx,ery,err,psx,psy,psr) === true){
+                        projectilenode.data.destroy();
+                        this.player.health --;
+                        var snd = new Audio("Sounds/rocks.wav"); // buffers automatically when created
+                        snd.play();
+                        console.log("BOOM! Your ship was hit by a projectile.");
+                    }
+
+                    //Collision with planet
+                    if (SimpleCollision(erx,ery,err,plx,ply,plr) === true){
+                        projectilenode.data.destroy();
+                        var snd = new Audio("Sounds/rocks.wav"); // buffers automatically when created
+                        snd.play();
+                        console.log("Planet hit!");
+                    }
+
+
+                    projectilenode = projectilenode.next;
+                }
+            }
 
 
             //Move to next node

@@ -3,7 +3,7 @@
  */
 
 /**
- * increment Funcation returns +1
+ * increment Function returns +1
  * returns {integer}
  */
 var incr = (function () {
@@ -37,9 +37,11 @@ function Enemy(targetx , targety, type) {
     this.rot = Math.atan2(this.x - targetx, this.y - targety);
     this.speed = 0.5;
 
-    this.shootTimer = 0;
+    this.shootTimer = Math.random() * 200 + 200 ;
 
     this.projectiles = new DoublyList();
+    this.targetx = targetx;
+    this.targety = targety;
 
     this.image = new Image();
     this.alive = true;
@@ -55,9 +57,9 @@ function Enemy(targetx , targety, type) {
             this.x -= this.speed * Math.sin(this.rot);
             this.y -= this.speed * Math.cos(this.rot);
 
-            if (this.rot > Math.PI * 2)
+            if (this.rot > Math.PI )
                 this.rot -= Math.PI * 2;
-            if (this.rot < -Math.PI * 2)
+            if (this.rot < -Math.PI )
                 this.rot += Math.PI * 2;        //console.log(this.rot);
 
             //if (this.x > 310 && this.x < 330 && this.y > 230 && this.y < 250)
@@ -76,15 +78,6 @@ function Enemy(targetx , targety, type) {
             }
             else //Rotate around planet
             {
-                this.shootTimer --;
-
-                if (this.shootTimer < 0)
-                {
-                    this.shootTimer = Math.random() * 200 + 200;
-                    this.projectiles.add(new Projectile(this.x, this.y, -this.rot, 0.5))
-                    console.log("Pew: " + this.shootTimer);
-                }
-
                 this.rot += 0.005;
 
                 if (this.rot > Math.PI * 2)
@@ -93,38 +86,45 @@ function Enemy(targetx , targety, type) {
                     this.rot += Math.PI * 2;
 
                 //Orbit distance must be less than "d".
-                this.x = (Game.width / 2) + (80) * Math.cos(this.rot);
-                this.y = (Game.height / 2) + (80) * Math.sin(this.rot);
-            }
+                this.x = (Game.width / 2) + 80 * Math.sin(this.rot) ;
+                this.y = (Game.height / 2) + 80 * Math.cos(this.rot);
 
-            if (this.projectiles._length > 0) {
+                this.shootTimer --;
 
-                var node = this.projectiles.head;
-
-                //Update loop
-                while (node != null) {
-                    node.data.update();
-                    node = node.next;
+                if (this.shootTimer < 0)
+                {
+                    this.shootTimer = Math.random() * 200 + 200;
+                    this.projectiles.add(new Projectile(this.x, this.y, Math.atan2(this.y - targety, this.x - targetx) + Math.PI, 0.5));
                 }
 
-                //Reset for remove loop
-                node = this.projectiles.head;
+                if (this.projectiles._length > 0) {
 
-                var count = 0;
+                    var node = this.projectiles.head;
 
-                //Remove loop
-                while (count < this.projectiles._length) {
-                    //Destroy the node
-                    if (node.data.alive == false){
-                        this.projectiles.searchAndRemove(node.data);
-                        break;
-                    }
-                    else
+                    //Update loop
+                    while (node != null) {
+                        node.data.update();
                         node = node.next;
-                    count++;
+                    }
+
+                    //Reset for remove loop
+                    node = this.projectiles.head;
+
+                    var count = 0;
+
+                    //Remove loop
+                    while (count < this.projectiles._length) {
+                        //Destroy the node
+                        if (node.data.alive == false){
+                            this.projectiles.searchAndRemove(node.data);
+                            break;
+                        }
+                        else
+                            node = node.next;
+                        count++;
+                    }
                 }
             }
-
         }
     };
 
