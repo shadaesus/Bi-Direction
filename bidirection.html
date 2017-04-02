@@ -167,6 +167,21 @@
         "use strict";
         var loc = locations[location];
         var info = loc.player + "(" + loc.x + ") - " + "\n";
+        var score = parseInt(loc.x.toString());
+        console.log(score);
+        var ar= [score];
+        console.log(ar);
+        return info;
+    }
+
+    function getPlayerInfo2(location) {
+        "use strict";
+        var loc = locations[location];
+
+        var score = parseInt(loc.x.toString());
+        var ar= [score];
+        ar.sort();
+        var info =  loc.player + " " + ar + " " + "\n";
         return info;
     }
 
@@ -174,7 +189,7 @@
         "use strict";
         var loc, info = "";
         for (loc in locations) {
-            info += getPlayerInfo(loc);
+            info += getPlayerInfo2(loc);
 
         }
         result_box.innerText = "High Score Table \n" + info + "\n";

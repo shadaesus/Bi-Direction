@@ -28,8 +28,8 @@ function keyboardControls(e) {
 //Game object.
 var Game = {
     fps: 60,
-    width: 800,
-    height: 600,
+    width: 640,
+    height: 480,
     time: 0,
     player: new Player(),
     enemyList: new DoublyList(),
